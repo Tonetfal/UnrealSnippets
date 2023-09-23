@@ -20,19 +20,24 @@ void UMTD_AbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AAc
 {
 	Super::InitAbilityActorInfo(InOwnerActor, InAvatarActor);
 
-	if (IsValid(InAvatarActor))
+	if (AbilityActorInfo->IsLocallyControlled())
 	{
-		auto* InputComponent = InAvatarActor->FindComponentByClass<UInputComponent>();
-		if (IsValid(InputComponent))
+		if (IsValid(InAvatarActor))
 		{
-			const auto* SettingsCDO = GetDefault<UMTD_AbilitySystemSettings>();
-			BindGenericActionsToInputComponent(InputComponent, SettingsCDO->GenericInputs);
+			auto* InputComponent = InAvatarActor->FindComponentByClass<UInputComponent>();
+			if (IsValid(InputComponent))
+			{
+				const auto* SettingsCDO = GetDefault<UMTD_AbilitySystemSettings>();
+				BindGenericActionsToInputComponent(InputComponent, SettingsCDO->GenericInputs);
+			}
 		}
 	}
 }
 
 void UMTD_AbilitySystemComponent::BindGenericEvent(FOnGenericActionTriggeredSignature Event)
 {
+	ensure(AbilityActorInfo->IsLocallyControlledPlayer());
+
 	TScriptDelegate ScriptDelegate;
 	ScriptDelegate.BindUFunction(Event.GetUObject(), Event.GetFunctionName());
 
@@ -47,6 +52,8 @@ void UMTD_AbilitySystemComponent::BindGenericEvent(FOnGenericActionTriggeredSign
 
 void UMTD_AbilitySystemComponent::UnbindGenericEvent(FOnGenericActionTriggeredSignature Event)
 {
+	ensure(AbilityActorInfo->IsLocallyControlledPlayer());
+
 	TScriptDelegate ScriptDelegate;
 	ScriptDelegate.BindUFunction(Event.GetUObject(), Event.GetFunctionName());
 
@@ -61,6 +68,8 @@ void UMTD_AbilitySystemComponent::UnbindGenericEvent(FOnGenericActionTriggeredSi
 void UMTD_AbilitySystemComponent::BindSpecificGenericEvent(FOnSpecificGenericActionTriggeredSignature Event,
 	FGameplayTag GenericActionTag)
 {
+	ensure(AbilityActorInfo->IsLocallyControlledPlayer());
+
 	TScriptDelegate ScriptDelegate;
 	ScriptDelegate.BindUFunction(Event.GetUObject(), Event.GetFunctionName());
 
@@ -78,6 +87,8 @@ void UMTD_AbilitySystemComponent::BindSpecificGenericEvent(FOnSpecificGenericAct
 void UMTD_AbilitySystemComponent::UnbindSpecificGenericEvent(FOnSpecificGenericActionTriggeredSignature Event,
 	FGameplayTag GenericActionTag)
 {
+	ensure(AbilityActorInfo->IsLocallyControlledPlayer());
+
 	TScriptDelegate ScriptDelegate;
 	ScriptDelegate.BindUFunction(Event.GetUObject(), Event.GetFunctionName());
 

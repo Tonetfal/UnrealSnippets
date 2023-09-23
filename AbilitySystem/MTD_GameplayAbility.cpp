@@ -16,7 +16,10 @@ void UMTD_GameplayAbility::ActivateAbility(
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	ChangeGenericActionBindingState(true);
+	if (IsLocallyControlled())
+	{
+		ChangeGenericActionBindingState(true);
+	}
 }
 
 void UMTD_GameplayAbility::EndAbility(
@@ -28,7 +31,10 @@ void UMTD_GameplayAbility::EndAbility(
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	ChangeGenericActionBindingState(false);
+	if (IsLocallyControlled())
+	{
+		ChangeGenericActionBindingState(false);
+	}
 }
 
 void UMTD_GameplayAbility::K2_EndAbility()
