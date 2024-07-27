@@ -45,3 +45,26 @@ instead it triggers `UMTD_AbilitySystemComponent::OnGenericActionInput(FGameplay
 listened by `UMTD_GameplayAbility::OnGenericActionTriggered`, notifying the ability about the `Confirm` generic action. 
 Upon finishing the ability we unbind these delegates, making the `IMC` be unbound as well, so that the player can jump 
 and fire once again.
+
+# Sticky focus
+
+When working with UI, it's extremely annoying to lose focus because the user clicks on something they are not 
+intended to click on. For instance, it might be the background of some menu screen. Usually they can get the focus 
+back by pressing on a focusable widget as they usually would, but it might ruin your animations making it feel like 
+the user broke something internally. There's a quick workaround that I personally find useful, but it might have some 
+flaws I'm not aware of.
+
+* This snippet assumes you to use common UI, but you can get it working with regular UMG/Slate. The only thing that 
+  has to be modified is how you define that you want your sticky focus to happen. Look at 
+  `AMTD_PlayerController::OnFocusChanged()`.
+
+## Setup
+
+1) Integrate what you can find in `MTD_PlayerController`.
+2) There is no step 2.
+
+## Functionality
+
+When the active common UI config is menu and the widget that you focused on is viewport, it saves the last widget 
+that was unfocused, and focuses on it the next frame. It's pretty much automatic, so you don't have to add or edit 
+anything in your widgets. All you have to do is make sure that you handle your focus properly.
