@@ -41,6 +41,7 @@ void AMTH_PlayerController::SetupFocusHandling()
 		FSlateApplication::Get().OnFocusChanging().AddUObject(this, &ThisClass::OnFocusChanged);
 	}
 }
+
 void AMTH_PlayerController::OnFocusChanged(const FFocusEvent& FocusEvent,
 	const FWeakWidgetPath& OldFocusedWidgetPath, const TSharedPtr<SWidget>& OldFocusedWidget,
 	const FWidgetPath& NewFocusedWidgetPath, const TSharedPtr<SWidget>& NewFocusedWidget)
@@ -63,7 +64,7 @@ void AMTH_PlayerController::OnFocusChanged(const FFocusEvent& FocusEvent,
     // the reason it's done on tick, is because the timer doesn't want to fire for no apparent reason
 	auto* ActionRouter = ULocalPlayer::GetSubsystem<UCommonUIActionRouterBase>(LocalPlayer);
     const bool bIsMenu = ActionRouter->GetActiveInputMode() == ECommonInputMode::Menu;
-    const bool bIsViewport = NewFocusedWidget->ToString().Contains("Viewport");
+    const bool bIsViewport = NewFocusedWidget.IsValid() && NewFocusedWidget->ToString().Contains("Viewport");
 	if (bIsMenu && bIsViewport)
 	{
         bShouldResetFocus = true;
